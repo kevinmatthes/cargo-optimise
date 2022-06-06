@@ -44,7 +44,11 @@ fn main() -> sysexits::ExitCode {
     };
 
     if !format.status.success() {
-        eprintln!("Failure:\n{:#?}", String::from_utf8(format.stderr));
+        eprintln!(
+            "Failure:\n{}",
+            String::from_utf8(format.stderr)
+                .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
+        );
         return sysexits::ExitCode::DataErr;
     } else {
         println!("Okay.")
@@ -61,7 +65,11 @@ fn main() -> sysexits::ExitCode {
     };
 
     if !check.status.success() {
-        eprintln!("Failure:\n{:#?}", String::from_utf8(check.stderr));
+        eprintln!(
+            "Failure:\n{}",
+            String::from_utf8(check.stderr)
+                .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
+        );
         return sysexits::ExitCode::DataErr;
     } else {
         println!("Okay.")
@@ -84,7 +92,11 @@ fn main() -> sysexits::ExitCode {
     };
 
     if !clippy.status.success() {
-        eprintln!("Failure:\n{:#?}", String::from_utf8(clippy.stderr));
+        eprintln!(
+            "Failure:\n{}",
+            String::from_utf8(clippy.stderr)
+                .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
+        );
         return sysexits::ExitCode::DataErr;
     } else {
         println!("Okay.");
