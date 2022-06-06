@@ -45,7 +45,7 @@ fn main() -> sysexits::ExitCode {
 
     if !format.status.success() {
         println!("Failure!");
-        eprintln!(
+        eprint!(
             "{}",
             String::from_utf8(format.stderr)
                 .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
@@ -67,7 +67,7 @@ fn main() -> sysexits::ExitCode {
 
     if !check.status.success() {
         println!("Failure!");
-        eprintln!(
+        eprint!(
             "{}",
             String::from_utf8(check.stderr)
                 .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
@@ -95,7 +95,7 @@ fn main() -> sysexits::ExitCode {
 
     if !clippy.status.success() {
         println!("Failure!");
-        eprintln!(
+        eprint!(
             "{}",
             String::from_utf8(clippy.stderr)
                 .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
