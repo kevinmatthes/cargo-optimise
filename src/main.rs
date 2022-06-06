@@ -19,18 +19,32 @@
 \******************************************************************************/
 
 fn main() -> sysexits::ExitCode {
+    if !match std::process::Command::new("cargo").arg("metadata").output() {
+        Ok(output) => output,
+        Err(_) => {
+            eprintln!("It cannot be checked whether this is a Rust project!");
+            return sysexits::ExitCode::Unavailable;
+        }
+    }
+    .status
+    .success()
+    {
+        eprintln!("This is not a Rust project!");
+        return sysexits::ExitCode::Usage;
+    }
+
     print!("Formatting the code ... ");
 
     let format = match std::process::Command::new("cargo").arg("fmt").output() {
-        Ok(process) => process,
-        Err(error) => {
-            eprintln!("{error}");
+        Ok(output) => output,
+        Err(_) => {
+            eprintln!("The code cannt be formatted!");
             return sysexits::ExitCode::Unavailable;
         }
     };
 
-    if format.status.code().unwrap() != 0 {
-        eprintln!("Failure:\n{:?}", String::from_utf8(format.stderr));
+    if !format.status.success() {
+        eprintln!("Failure:\n{:#?}", String::from_utf8(format.stderr));
         return sysexits::ExitCode::DataErr;
     } else {
         println!("Okay.")
@@ -39,15 +53,15 @@ fn main() -> sysexits::ExitCode {
     print!("Checking whether the code compiles ... ");
 
     let check = match std::process::Command::new("cargo").arg("check").output() {
-        Ok(process) => process,
-        Err(error) => {
-            eprintln!("{error}");
+        Ok(output) => output,
+        Err(_) => {
+            eprintln!("It cannot be checked whether this code compiles!");
             return sysexits::ExitCode::Unavailable;
         }
     };
 
-    if check.status.code().unwrap() != 0 {
-        eprintln!("Failure:\n{:?}", String::from_utf8(check.stderr));
+    if !check.status.success() {
+        eprintln!("Failure:\n{:#?}", String::from_utf8(check.stderr));
         return sysexits::ExitCode::DataErr;
     } else {
         println!("Okay.")
@@ -62,15 +76,15 @@ fn main() -> sysexits::ExitCode {
         .arg("--allow-staged")
         .output()
     {
-        Ok(process) => process,
-        Err(error) => {
-            eprintln!("{error}");
+        Ok(output) => output,
+        Err(_) => {
+            eprintln!("The code cannot be linted!");
             return sysexits::ExitCode::Unavailable;
         }
     };
 
-    if clippy.status.code().unwrap() != 0 {
-        eprintln!("Failure:\n{:?}", String::from_utf8(clippy.stderr));
+    if !clippy.status.success() {
+        eprintln!("Failure:\n{:#?}", String::from_utf8(clippy.stderr));
         return sysexits::ExitCode::DataErr;
     } else {
         println!("Okay.");

@@ -67,4 +67,26 @@ version is as follows:
 > with this program; if not, write to the Free Software Foundation, Inc.,
 > 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+## Installation and Updating
+
+Installation is very easy with Cargo.  Just execute the following line in a
+terminal:
+
+```
+cargo install --git https://github.com/kevinmatthes/cargo-optimise
+```
+
+This command will install a release compilation of the latest version locally to
+your user account.
+
+In order to install the latest updates, rerun with `--force`:
+
+```
+cargo install --force --git https://github.com/kevinmatthes/cargo-optimise
+```
+
+Cargo will then replace the currently installed release binary with a newly
+compiled one from the latest repository state using the configured release
+profile.
+
 <!----------------------------------------------------------------------------->
