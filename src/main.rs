@@ -38,7 +38,7 @@ fn main() -> sysexits::ExitCode {
     let format = match std::process::Command::new("cargo").arg("fmt").output() {
         Ok(output) => output,
         Err(_) => {
-            eprintln!("The code cannt be formatted!");
+            eprintln!("The code cannot be formatted!");
             return sysexits::ExitCode::Unavailable;
         }
     };
