@@ -32,6 +32,7 @@
 ################################################################################
 
 [package]
+description = "Optimise the current project with Cargo."
 name = "cargo-optimise"
 version = "0.1.0"
 edition = "2021"
