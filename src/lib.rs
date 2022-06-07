@@ -29,11 +29,11 @@ pub struct Application {
 }
 
 impl Application {
-    pub fn failure(&self, error: &str) -> bool {
+    pub fn failure(&self, error: String) -> bool {
         let ret = !self.success();
 
         if ret {
-            eprintln!("{error}")
+            eprint!("{error}")
         }
 
         ret
@@ -51,8 +51,8 @@ impl Application {
             }
             sysexits::ExitCode::Ok => {
                 match self.failure(match error {
-                    Some(string) => string,
-                    None => self.stderr(),
+                    Some(string) => format!("{string}\n"),
+                    None => String::from(self.stderr()),
                 }) {
                     true => Some(ret),
                     false => None,
