@@ -19,90 +19,35 @@
 \******************************************************************************/
 
 fn main() -> sysexits::ExitCode {
-    if !match std::process::Command::new("cargo").arg("metadata").output() {
-        Ok(output) => output,
-        Err(_) => {
-            eprintln!("It cannot be checked whether this is a Rust project!");
-            return sysexits::ExitCode::Unavailable;
-        }
-    }
-    .status
-    .success()
-    {
-        eprintln!("This is not a Rust project!");
-        return sysexits::ExitCode::Usage;
-    }
+    let mut check = cargo_optimise::Application::new("cargo", vec!["check"]);
+    let mut clippy = cargo_optimise::Application::new(
+        "cargo",
+        vec!["clippy", "--fix", "--allow-dirty", "--allow-staged"],
+    );
+    let mut metadata = cargo_optimise::Application::new("cargo", vec!["metadata"]);
+    let mut format = cargo_optimise::Application::new("cargo", vec!["fmt"]);
 
-    print!("Formatting the code ... ");
-
-    let format = match std::process::Command::new("cargo").arg("fmt").output() {
-        Ok(output) => output,
-        Err(_) => {
-            eprintln!("The code cannot be formatted!");
-            return sysexits::ExitCode::Unavailable;
-        }
-    };
-
-    if !format.status.success() {
-        println!("Failure!");
-        eprint!(
-            "{}",
-            String::from_utf8(format.stderr)
-                .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
-        );
-        return sysexits::ExitCode::DataErr;
-    } else {
-        println!("Okay.")
+    match metadata.handle(
+        Some("This is not a Rust project!"),
+        sysexits::ExitCode::Usage,
+    ) {
+        None => (),
+        Some(code) => return code,
     }
 
-    print!("Checking whether the code compiles ... ");
-
-    let check = match std::process::Command::new("cargo").arg("check").output() {
-        Ok(output) => output,
-        Err(_) => {
-            eprintln!("It cannot be checked whether this code compiles!");
-            return sysexits::ExitCode::Unavailable;
-        }
-    };
-
-    if !check.status.success() {
-        println!("Failure!");
-        eprint!(
-            "{}",
-            String::from_utf8(check.stderr)
-                .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
-        );
-        return sysexits::ExitCode::DataErr;
-    } else {
-        println!("Okay.")
+    match format.handle(None, sysexits::ExitCode::DataErr) {
+        None => (),
+        Some(code) => return code,
     }
 
-    print!("Linting the code ... ");
+    match check.handle(None, sysexits::ExitCode::DataErr) {
+        None => (),
+        Some(code) => return code,
+    }
 
-    let clippy = match std::process::Command::new("cargo")
-        .arg("clippy")
-        .arg("--fix")
-        .arg("--allow-dirty")
-        .arg("--allow-staged")
-        .output()
-    {
-        Ok(output) => output,
-        Err(_) => {
-            eprintln!("The code cannot be linted!");
-            return sysexits::ExitCode::Unavailable;
-        }
-    };
-
-    if !clippy.status.success() {
-        println!("Failure!");
-        eprint!(
-            "{}",
-            String::from_utf8(clippy.stderr)
-                .unwrap_or(format!("{}", sysexits::ExitCode::IoErr as u32))
-        );
-        return sysexits::ExitCode::DataErr;
-    } else {
-        println!("Okay.");
+    match clippy.handle(None, sysexits::ExitCode::DataErr) {
+        None => (),
+        Some(code) => return code,
     }
 
     sysexits::ExitCode::Ok
