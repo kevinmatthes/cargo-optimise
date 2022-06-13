@@ -32,12 +32,17 @@
 ################################################################################
 
 [package]
+categories = ["development-tools", "development-tools::cargo-plugins"]
 description = "Optimise the current project with Cargo."
+keywords = ["cargo", "check", "clippy", "plugin", "rustfmt"]
+license = "GPL-2.0"
 name = "cargo-optimise"
+repository = "https://github.com/kevinmatthes/cargo-optimise"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-sysexits = "*"
+clap = {version = "3.1.18", features = ["derive"]}
+sysexits = "0.3.0"
 
 ################################################################################

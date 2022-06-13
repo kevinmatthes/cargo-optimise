@@ -18,39 +18,78 @@
 |                                                                              |
 \******************************************************************************/
 
+// Third party libraries.
+use clap::Parser;
+
+/// The main function.
+///
+/// It composes the required functionalities and takes care for the error event
+/// handling as well as the return status.
 fn main() -> sysexits::ExitCode {
-    let mut check = cargo_optimise::Application::new("cargo", vec!["check"]);
-    let mut clippy = cargo_optimise::Application::new(
-        "cargo",
-        vec!["clippy", "--fix", "--allow-dirty", "--allow-staged"],
-    );
-    let mut metadata = cargo_optimise::Application::new("cargo", vec!["metadata"]);
-    let mut format = cargo_optimise::Application::new("cargo", vec!["fmt"]);
+    const PROCESSES: usize = 5;
 
-    match metadata.handle(
-        Some("This is not a Rust project!"),
-        sysexits::ExitCode::Usage,
-    ) {
-        None => (),
-        Some(code) => return code,
+    let args = cargo_optimise::CliOptions::parse();
+
+    if args.license() {
+        cargo_optimise::license();
+        return sysexits::ExitCode::Ok;
     }
 
-    match format.handle(None, sysexits::ExitCode::DataErr) {
-        None => (),
-        Some(code) => return code,
-    }
+    let applications = vec!["cargo".into(); PROCESSES];
 
-    match check.handle(None, sysexits::ExitCode::DataErr) {
-        None => (),
-        Some(code) => return code,
-    }
+    let mut arguments = vec![vec!["metadata".into()]];
+    arguments.push(vec![
+        "clippy".into(),
+        "--fix".into(),
+        "--allow-dirty".into(),
+        "--allow-staged".into(),
+    ]);
+    arguments.push(vec!["fmt".into()]);
+    arguments.push(vec!["check".into()]);
+    arguments.push(vec![
+        "clippy".into(),
+        "--".into(),
+        "-D".into(),
+        "clippy::all".into(),
+        "-D".into(),
+        "clippy::cargo".into(),
+        "-D".into(),
+        "clippy::complexity".into(),
+        "-D".into(),
+        "clippy::correctness".into(),
+        "-D".into(),
+        "clippy::nursery".into(),
+        "-D".into(),
+        "clippy::perf".into(),
+        "-D".into(),
+        "clippy::pedantic".into(),
+        "-D".into(),
+        "clippy::suspicious".into(),
+        "-D".into(),
+        "clippy::style".into(),
+    ]);
+    let arguments = arguments;
 
-    match clippy.handle(None, sysexits::ExitCode::DataErr) {
-        None => (),
-        Some(code) => return code,
-    }
+    let mut error_messages = vec![None; PROCESSES];
+    error_messages[0] = Some("This is not a Cargo maintained Rust project".into());
+    let error_messages = error_messages;
 
-    sysexits::ExitCode::Ok
+    let mut exit_codes = vec![sysexits::ExitCode::DataErr; PROCESSES];
+    exit_codes[0] = sysexits::ExitCode::Usage;
+    let exit_codes = exit_codes;
+
+    let mut verbosities = vec![args.verbosity(); PROCESSES];
+    verbosities[0].silent();
+    let verbosities = verbosities;
+
+    cargo_optimise::Application::new(
+        applications,
+        arguments,
+        error_messages,
+        exit_codes,
+        verbosities,
+    )
+    .run()
 }
 
 /******************************************************************************/

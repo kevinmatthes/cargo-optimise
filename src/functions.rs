@@ -18,33 +18,31 @@
 |                                                                              |
 \******************************************************************************/
 
-//! The library root of this crate.
+//! Standalone auxillary functions of this crate.
 //!
-//! It defines the crate settings and controls how the contained modules are
-//! presented.
+//! These functions cannot be associated with dedicated data structures and / or
+//! enums such that they are collected here centrally as utility functions on
+//! their own.
 
-// The lint levels in order to ensure at most quality of the source code.
-#![deny(clippy::all)]
-#![deny(clippy::complexity)]
-#![deny(clippy::correctness)]
-#![deny(clippy::nursery)]
-#![deny(clippy::perf)]
-#![deny(clippy::pedantic)]
-#![deny(clippy::suspicious)]
-#![deny(clippy::style)]
-
-// Module imports.
-mod application;
-mod cli_options;
-mod functions;
-mod process;
-mod verbosity;
-
-// Module exports.
-pub use crate::application::Application;
-pub use crate::cli_options::CliOptions;
-pub use crate::functions::license;
-pub use crate::process::Process;
-pub use crate::verbosity::{ParseError as VerbosityParseError, Verbosity};
+/// Show the license information.
+pub fn license() {
+    println!(
+        "Copyright (C) 2022 Kevin Matthes\n\
+        \n\
+        This program is free software; you can redistribute it and/or modify\n\
+        it under the terms of the GNU General Public License as published by\n\
+        the Free Software Foundation; either version 2 of the License, or\n\
+        (at your option) any later version.\n\
+        \n\
+        This program is distributed in the hope that it will be useful,\n\
+        but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+        GNU General Public License for more details.\n\
+        \n\
+        You should have received a copy of the GNU General Public License along\n\
+        with this program; if not, write to the Free Software Foundation, Inc.,\n\
+        51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA."
+    );
+}
 
 /******************************************************************************/

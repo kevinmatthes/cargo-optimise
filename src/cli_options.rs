@@ -18,33 +18,31 @@
 |                                                                              |
 \******************************************************************************/
 
-//! The library root of this crate.
-//!
-//! It defines the crate settings and controls how the contained modules are
-//! presented.
+/// The configured command line options.
+#[derive(clap::Parser)]
+#[clap(author, version, about, long_about = None)]
+pub struct CliOptions {
+    /// Show the license information and quit.
+    #[clap(short, long)]
+    license: bool,
 
-// The lint levels in order to ensure at most quality of the source code.
-#![deny(clippy::all)]
-#![deny(clippy::complexity)]
-#![deny(clippy::correctness)]
-#![deny(clippy::nursery)]
-#![deny(clippy::perf)]
-#![deny(clippy::pedantic)]
-#![deny(clippy::suspicious)]
-#![deny(clippy::style)]
+    /// The verbosity level for this run.
+    #[clap(short, long, default_value = "monosyllabic")]
+    verbosity: crate::Verbosity,
+}
 
-// Module imports.
-mod application;
-mod cli_options;
-mod functions;
-mod process;
-mod verbosity;
+impl CliOptions {
+    /// Retrieve the license information mode.
+    #[must_use]
+    pub const fn license(&self) -> bool {
+        self.license
+    }
 
-// Module exports.
-pub use crate::application::Application;
-pub use crate::cli_options::CliOptions;
-pub use crate::functions::license;
-pub use crate::process::Process;
-pub use crate::verbosity::{ParseError as VerbosityParseError, Verbosity};
+    /// Retrieve the verbosity level.
+    #[must_use]
+    pub const fn verbosity(&self) -> crate::Verbosity {
+        self.verbosity
+    }
+}
 
 /******************************************************************************/
