@@ -26,14 +26,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
-name = "cargo-optimise"
-version = "0.1.0"
-dependencies = [
- "clap",
- "sysexits",
-]
-
-[[package]]
 name = "clap"
 version = "3.1.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -161,6 +153,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a1feb54ed693b93a84e14094943b84b7c4eae204c512b7ccb95ab0c66d278ad1"
 dependencies = [
  "proc-macro2",
+]
+
+[[package]]
+name = "rs-optimise"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "sysexits",
 ]
 
 [[package]]

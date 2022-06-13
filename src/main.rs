@@ -28,10 +28,10 @@ use clap::Parser;
 fn main() -> sysexits::ExitCode {
     const PROCESSES: usize = 5;
 
-    let args = cargo_optimise::CliOptions::parse();
+    let args = rs_optimise::CliOptions::parse();
 
     if args.license() {
-        cargo_optimise::license();
+        rs_optimise::license();
         return sysexits::ExitCode::Ok;
     }
 
@@ -82,7 +82,7 @@ fn main() -> sysexits::ExitCode {
     verbosities[0].silent();
     let verbosities = verbosities;
 
-    cargo_optimise::Application::new(
+    rs_optimise::Application::new(
         applications,
         arguments,
         error_messages,
