@@ -23,11 +23,11 @@
 #[clap(author, version, about, long_about = None)]
 pub struct CliOptions {
     /// Show the license information and quit.
-    #[clap(short, long)]
+    #[clap(short, long, action)]
     license: bool,
 
     /// The verbosity level for this run.
-    #[clap(short, long, default_value = "monosyllabic")]
+    #[clap(short, long, default_value = "monosyllabic", value_parser)]
     verbosity: crate::Verbosity,
 }
 
