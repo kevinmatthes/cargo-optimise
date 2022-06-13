@@ -32,7 +32,7 @@
 ################################################################################
 
 [package]
-categories = ["development-tools", "development-tools::cargo-plugins"]
+categories = ["command-line-utilities", "development-tools"]
 description = "Optimise the current project with Cargo."
 keywords = ["cargo", "check", "clippy", "plugin", "rustfmt"]
 license = "GPL-2.0"
