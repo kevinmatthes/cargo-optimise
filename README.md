@@ -77,16 +77,7 @@ cargo install --git https://github.com/kevinmatthes/cargo-optimise
 ```
 
 This command will install a release compilation of the latest version locally to
-your user account.
-
-In order to install the latest updates, rerun with `--force`:
-
-```
-cargo install --force --git https://github.com/kevinmatthes/cargo-optimise
-```
-
-Cargo will then replace the currently installed release binary with a newly
-compiled one from the latest repository state using the configured release
-profile.
+your user account.  The same command also works for regular updates, this is,
+new commits have had been introduced since the last installation.
 
 <!----------------------------------------------------------------------------->
